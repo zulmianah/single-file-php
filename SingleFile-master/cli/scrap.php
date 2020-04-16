@@ -1,42 +1,40 @@
 <?php
-function extracteLinks($url, $extractedLinks)
+function getHtml($filename) {
+	libxml_use_internal_errors(true);
+	$file = file_get_contents($filename);
+	$html = html_entity_decode($file);
+	libxml_use_internal_errors(false);
+	return $html;
+}
+function extracteLinks($url, $host, $html, $extractedLinks)
 {
-	$i=0;
-	$host = parse_url($url)['host'];
-	$arrContextOptions=array(
-		"ssl"=>array(
-			"verify_peer"=>false,
-			"verify_peer_name"=>false,
-		),
-	);  
-	$html=file_get_contents($url);
-	$htmlDom = new DOMDocument;
-	@$htmlDom->loadHTML($html);
-	$links = $htmlDom->getElementsByTagName('a');
+	$doc = new DOMDocument;
+	@$doc->loadHTML($html);
+	$links = $doc->getElementsByTagName('a');
 	foreach($links as $link){
 		$linkHref = $link->getAttribute('href');
-		if(strlen(trim($linkHref)) == 0){
-			continue;
+		$linkHost = getHost($linkHref);
+		if($host == $linkHost){
+			if (!in_array($linkHref, $extractedLinks)) {
+				if(!ifFragment($linkHref)) array_push($extractedLinks, ($linkHref));
+			}
 		}
-		if($linkHref[0] == '#'){
-			continue;
-		}
-		$headers = @get_headers($url);
-		// if the url doesn't exist 
-		if(!($headers && strpos( $headers[0], '200'))) { 
-			continue;
-		} 
-		$linkHost = parse_url($linkHref)['host'];
-		// if the url is from the host 
-		if(strcmp($host, $linkHost) != 0){
-			continue;
-		}
-		// if the url is already in the list
-		if (in_array($linkHref, $extractedLinks)) { 
-			continue;
-		}
-		array_push($extractedLinks, $linkHref);
 	}
-	return ($extractedLinks);
+	return $extractedLinks;
+}
+function getHost($link){
+	if (isset(parse_url($link)['host'])){
+		return $host = parse_url($link)['host'];
+	} else return null;
+}
+function ifFragment($link){
+	return isset(parse_url($link)['fragment']);
+}
+function getDocLinks($html){
+	$doc = new DOMDocument;
+	@$doc->loadHTML($html);
+	$links = $doc->getElementsByTagName('a');
+	$docAndLinks['doc'] = $doc;
+	$docAndLinks['links'] = $links;
 }
 ?>
