@@ -3,29 +3,28 @@ require 'scrap.php';
 require 'single-file.php';
 function scrapLinksWebsite($link, $host,$extractedLinks,$i,$t1,$status,$directionAndFolder)
 {
-	$stop=-1;
+	$stop=1;
 	$html = '';
-	$file = $directionAndFolder.''.nameFile($link);
-	$commande = commandeSingleFile($file,$link);
-	array_push($status['files'], $file);
-	exec($commande);
-	return $extractedLinks;
+	// $file = $directionAndFolder.''.nameFile($link);
+	// $commande = commandeSingleFile($file,$link);
+	// array_push($status['files'], $file);
+	// exec($commande);
 	try{
 		$html = file_get_contents($link);
-		$extractedLinks = extracteLinks($link, $host, $html, $extractedLinks);
+		$status['extractedLinks'] = extracteLinks($link, $host, $html, $status['extractedLinks']);
 	}catch(Exception $ex){
 		$i++;
-		return $extractedLinks;
+		return $status;
 	}
 	$i++;
-	$linksLength = sizeof($extractedLinks);
+	$linksLength = sizeof($status['extractedLinks']);
 	for ($i; $i < $linksLength; $i++) { 
 		if((time()-$t1)/60>$stop){
-			return $extractedLinks;
+			return $status;
 		}
-		$extractedLinks = scrapLinksWebsite($extractedLinks[$i], $host,$extractedLinks,$i,$t1,$status,$directionAndFolder);
+		$status = scrapLinksWebsite($status['extractedLinks'][$i], $host,$status['extractedLinks'],$i,$t1,$status,$directionAndFolder);
 	}
-	return $extractedLinks;
+	return $status;
 }
 function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 	$status = array();
@@ -43,7 +42,15 @@ function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 	}
 	$status['extractedLinks'] = $extractedLinks;
 	$status = scrapLinksWebsite($link, $host,$extractedLinks,$i,$t1,$status,$directionAndFolder);
-	var_dump( $status);
+	$filesSize = sizeof($status['files']);
+	$filesLink = sizeof($status['extractedLinks']);
+	for($j=$filesSize;$j<$filesLink; $j++){
+		$linkLeft = $status['extractedLinks'][$j];
+		$file = $directionAndFolder.''.nameFile($linkLeft);
+		$commande = commandeSingleFile($file,$linkLeft);
+		array_push($status['files'], $file);
+		exec($commande);
+	}
 	$iWhere = 0;
 	$filesSize = sizeof($status['files']);
 	ifAllLinksDownloaded($status['files'],$iWhere,$filesSize);
@@ -51,11 +58,12 @@ function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 	foreach($status['files'] as $file){
 		updateLinkToLocalLink(getHtml($file), $regex, $file);
 	}
+	return $status;
 }
 function ifAllLinksDownloaded($files,$i,$filesSize){
 	for ($i;$i<$filesSize;$i++){
 		if (!file_exists($files[$i])){
-			sleep(5);
+			sleep(20);
 			return ifAllLinksDownloaded($files,$i,$filesSize);
 		}
 	}
@@ -95,10 +103,11 @@ $link = 'https://www.alacase.fr/';
 $host = getHost($link);
 $direction = '../../my-single-file-website/';
 $directionAndFolder = $direction.''.$host.'/';
-$extractedLinks = startScrapLinksWebsite($link,$host,$direction,$directionAndFolder);
+$status = startScrapLinksWebsite($link,$host,$direction,$directionAndFolder);
+$sizeFile = sizeof($status['files']);
+$sizeLink = sizeof($status['extractedLinks']);
 $finnish = time();
-$interval = ($finnish - $start);
-var_dump($interval) ;
+$interval = ($finnish - $start)/60;
 ?>
 <!DOCTYPE html>
 <html>
@@ -106,6 +115,9 @@ var_dump($interval) ;
 	<title></title>
 </head>
 <body>
+	<h2>SUCCESS!</h2>
+	<p>you downloaded <?php echo $host; ?> for offline viewing in <?php echo $interval; ?> minutes</p>
+	<p><?php echo $sizeFile; ?>/<?php echo $sizeLink; ?> files</p>
 	<a href="<?php echo $directionAndFolder; ?>">go to <?php echo $host; ?> offline</a>
 </body>
 </html>
