@@ -15,6 +15,7 @@ function getLinksFromFile($fileName)
 	$text = getTextFile($fileName);
 	return explode("\n", $text);
 }
-// $myfile = fopen("testfile.txt", "w")
-// fclose($myfile);
+function linkToFolder($host){
+	return $host.'/';
+}
 ?>  

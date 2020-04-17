@@ -1,18 +1,20 @@
 <?php
 require 'scrap.php';
+require 'my-exception.php';
 require 'single-file.php';
+// $status['extractedLinks']	les liens a telecharger
+// $status['files']				les noms de fichiers telecharges
+// dossier ou sont stockes les sites hors ligne
+$direction = '../../my-single-file-website/';
+// fonction pour avoir les liens possibles d'un site
 function scrapLinksWebsite($link, $host,$extractedLinks,$i,$t1,$status,$directionAndFolder)
 {
 	$stop=1;
 	$html = '';
-	// $file = $directionAndFolder.''.nameFile($link);
-	// $commande = commandeSingleFile($file,$link);
-	// array_push($status['files'], $file);
-	// exec($commande);
 	try{
 		$html = file_get_contents($link);
 		$status['extractedLinks'] = extracteLinks($link, $host, $html, $status['extractedLinks']);
-	}catch(Exception $ex){
+	}catch(Exception $exception){
 		$i++;
 		return $status;
 	}
@@ -26,6 +28,7 @@ function scrapLinksWebsite($link, $host,$extractedLinks,$i,$t1,$status,$directio
 	}
 	return $status;
 }
+// fonction pour demarer l'absorption des liens possibles d'un site
 function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 	$status = array();
 	$status['files']=array();
@@ -69,40 +72,11 @@ function ifAllLinksDownloaded($files,$i,$filesSize){
 	}
 	return true;
 }
-
-function updateLinkToLocalLink($html, $regex, $file){
-	libxml_use_internal_errors(true);
-	$pattern = '/https?:\/\/'.$regex.'\//';
-	$newLink = preg_replace($pattern,'', $html);
-	$doc = new DOMDocument;
-	$doc->loadHTML($newLink);
-	$links = $doc->getElementsByTagName('a');
-	foreach ($links as $newLink1) {
-		$hrefLink = parse_url($newLink1->getAttribute('href'));
-		if(!isset($hrefLink['host'])){
-			if(isset($hrefLink['path'])){
-				$str = str_replace('/', "-", $hrefLink['path']);
-				$newLink1->setAttribute('href',$str.'.html');
-			}
-		}
-	}
-	file_put_contents($file,'');
-	file_put_contents($file,$doc->saveHTML());
-	libxml_use_internal_errors(false);
-}
-function linkToFolder($host){
-	return $host.'/';
-}
-function createCommande($link,$host,$nameFile){
-	$nameFile = nameFile($link);
-	return $host.'/'.$nameFile;
-}
-// $link = $_POST["name"];
 $start = time();
-$link = 'https://www.alacase.fr/';
+$link = $_POST["name"];
 $host = getHost($link);
-$direction = '../../my-single-file-website/';
-$directionAndFolder = $direction.''.$host.'/';
+$folder = linkToFolder($host);
+$directionAndFolder = $direction.''.$folder;
 $status = startScrapLinksWebsite($link,$host,$direction,$directionAndFolder);
 $sizeFile = sizeof($status['files']);
 $sizeLink = sizeof($status['extractedLinks']);
@@ -116,20 +90,8 @@ $interval = ($finnish - $start)/60;
 </head>
 <body>
 	<h2>SUCCESS!</h2>
-	<p>you downloaded <?php echo $host; ?> for offline viewing in <?php echo $interval; ?> minutes</p>
+	<p>You downloaded <?php echo $host; ?> for offline viewing in <?php echo $interval; ?> minutes</p>
 	<p><?php echo $sizeFile; ?>/<?php echo $sizeLink; ?> files</p>
 	<a href="<?php echo $directionAndFolder; ?>">go to <?php echo $host; ?> offline</a>
 </body>
 </html>
-<script>
-	// while (true) {
-	// 	var xhttp = new XMLHttpRequest();
-	// 	xhttp.onreadystatechange = function() {
-	// 		if (this.readyState == 4 && this.status == 200) {
-	// 			document.getElementById("demo").innerHTML = this.responseText;
-	// 		}
-	// 	};
-	// 	xhttp.open("GET", "ajax_info.txt", true);
-	// 	xhttp.send();
-	// }
-</script>

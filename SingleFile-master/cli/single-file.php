@@ -47,5 +47,29 @@ function execInBackground($cmd) {
     else { 
         exec($cmd . " > /dev/null &");   
     } 
-} 
+}
+function createCommande($link,$host,$nameFile){
+	$nameFile = nameFile($link);
+	return $host.'/'.$nameFile;
+}
+function updateLinkToLocalLink($html, $regex, $file){
+	libxml_use_internal_errors(true);
+	$pattern = '/https?:\/\/'.$regex.'\//';
+	$newLink = preg_replace($pattern,'', $html);
+	$doc = new DOMDocument;
+	$doc->loadHTML($newLink);
+	$links = $doc->getElementsByTagName('a');
+	foreach ($links as $newLink1) {
+		$hrefLink = parse_url($newLink1->getAttribute('href'));
+		if(!isset($hrefLink['host'])){
+			if(isset($hrefLink['path'])){
+				$str = str_replace('/', "-", $hrefLink['path']);
+				$newLink1->setAttribute('href',$str.'.html');
+			}
+		}
+	}
+	file_put_contents($file,'');
+	file_put_contents($file,$doc->saveHTML());
+	libxml_use_internal_errors(false);
+}
 ?>
