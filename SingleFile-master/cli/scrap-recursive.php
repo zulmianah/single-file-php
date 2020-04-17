@@ -40,7 +40,7 @@ function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 	array_push($extractedLinks, $link);
 	$i=0;
 	if(is_null($link)){
-		echo "link empty";
+		writeError(new Exception("link empty"));
 		return;
 	}
 	$status['extractedLinks'] = $extractedLinks;

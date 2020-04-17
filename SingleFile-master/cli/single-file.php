@@ -4,7 +4,7 @@ function singleFile($url,$mySingleFileDirection){
 	$command = 'single-file '.$url.' '.$mySingleFileDirection.$fileName;
 	exec($command, $output, $return_var);
 	if($return_var !== 0){
-		var_dump('error');
+		riteError(new Exception($command." doesn't work properly"));
 	}
 	else{
 		return $fileName;

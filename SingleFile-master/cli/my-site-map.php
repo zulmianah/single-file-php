@@ -1,22 +1,33 @@
 <?php
 require 'file.php';
 require 'scrap-recursive.php';
+error_reporting(0);
+ini_set('display_errors', 0);
 function startSingleFileWordpress($link)
 {
-	$host = getHost($link);
-	$folder = linkToFolder($host);
-	$direction = '../../my-single-file-website/';
-	$directionAndFolder = $direction.''.$folder;
 	$parse=parse_url($link);
-	$link=$parse['scheme'].'://'.$parse['host'];
 	$status = array();
 	$status['files']=array();
-	if (!file_exists($directionAndFolder)) {
-		mkdir($directionAndFolder);
+	$status['extractedLinks'] = array();
+	$status['status'] = 'FAIL';
+	if(sizeof($parse)<2){
+		writeError(new Exception("Error link input: ".$link));
+		return $status;
 	}
+	$folder = linkToFolder($parse['host']);
+	$direction = '../../my-single-file-website/';
+	$directionAndFolder = $direction.''.$folder;
+	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
+	$link=$parse['scheme'].'://'.$parse['host'];
 	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
 	$filesSize = sizeof($status['files']);
 	$filesLink = sizeof($status['extractedLinks']);
+	stream_context_set_default( [
+		'ssl' => [
+			'verify_peer' => false,
+			'verify_peer_name' => false,
+		],
+	]);
 	for($j=$filesSize;$j<$filesLink; $j++){
 		$linkLeft = $status['extractedLinks'][$j];
 		if(statusExist($linkLeft)){
@@ -24,35 +35,47 @@ function startSingleFileWordpress($link)
 			$commande = commandeSingleFile($file,$linkLeft);
 			array_push($status['files'], $file);
 			exec($commande);
+		}else{
+			writeError(new Exception($linkLeft." return an error 404"));
 		}
 	}
 	$iWhere = 0;
 	$filesSize = sizeof($status['files']);
 	ifAllLinksDownloaded($status['files'],$iWhere,$filesSize);
-	$regex = str_replace('.','\.',$host);
+	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
 		updateLinkToLocalLink(getHtml($file), $regex, $file);
 	}
+	$directionAndFolder=checkFolderOrCreate('../../my-single-file-website/');
+	$directionAndZipFolder=checkFolderOrCreate('../../my-single-file-zip-website/');
+	zipFile($parse['host'],$directionAndFolder,$directionAndZipFolder);
+	$status['status'] = 'SUCCESS';
 	return $status;
 }
 function getLinksFromWordpress($link,$parse)
 {
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	// var_dump($linksFromSitemap);
-	// var_dump($linksFromWordpressPagination);
 	return $links = array_merge($linksFromSitemap,$linksFromWordpressPagination);
 }
 function getLinksFromSitemap($link,$parse)
 {
-	$sitemapIndexXmlLink=$parse['scheme'].'://'.$parse['host'].'/sitemap_index.xml';
-	$sitemapIndexXml=simplexml_load_file($sitemapIndexXmlLink) or die("Error: Cannot create object");
-	$sitemapIndex = $sitemapIndexXml->sitemap;
 	$links=array();
-	foreach ($sitemapIndex as $siteMap) {
-		$sitemapXml = simplexml_load_file($siteMap->loc) or die("Error: Cannot create object");
-		foreach ($sitemapXml->url as $url) {
-			array_push($links, $url->loc);
+	$sitemapIndexXmlLink=$parse['scheme'].'://'.$parse['host'].'/sitemap_index.xml';
+	$sitemapIndexXml=simplexml_load_file($sitemapIndexXmlLink);
+	if($sitemapIndexXml===FALSE) {
+		writeError(new Exception($sitemapIndexXmlLink." not found"));
+	} else {
+		$sitemapIndex = $sitemapIndexXml->sitemap;
+		foreach ($sitemapIndex as $siteMap) {
+			$sitemapXml = simplexml_load_file($siteMap->loc);
+			if($sitemapXml===FALSE) {
+				writeError(new Exception($sitemapXml." not found"));
+			} else {
+				foreach ($sitemapXml->url as $url) {
+					array_push($links, $url->loc);
+				}
+			}
 		}
 	}
 	return $links;
@@ -72,6 +95,7 @@ function getLinksFromWordpressPagination($link)
 				$iError=0;
 			}else{
 				array_push($links, $linkPage);
+				writeError(new Exception($linkPage." not found"));
 				$iPage++;
 				$iError++;
 			}
@@ -81,10 +105,10 @@ function getLinksFromWordpressPagination($link)
 			array_pop($links);
 			$i++;
 		}
-		return $links;
 	} catch (Exception $e) {
-		throw $e;
+		writeError($e);
 	}
+	return $links;
 }
 function statusExist($link)
 {
@@ -105,7 +129,8 @@ try {
 	$host = getHost($link);
 	$folder = linkToFolder($host);
 	$direction = '../../my-single-file-website/';
-	$directionAndFolder = $direction.''.$folder;
+	$directionAndZipFolder=checkFolderOrCreate('../../my-single-file-zip-website/');
+	$zipFile=$directionAndZipFolder.$host.'.zip';
 } catch (Exception $e) {
 	writeError($e);
 }
@@ -116,9 +141,17 @@ try {
 	<title></title>
 </head>
 <body>
-	<h2>SUCCESS!</h2>
+	<h2><?php echo $status['status'] ?>!</h2>
 	<p>You downloaded <?php echo $host; ?> for offline viewing in <?php echo $interval; ?> minutes</p>
 	<p><?php echo $sizeFile; ?>/<?php echo $sizeLink; ?> files</p>
-	<a href="<?php echo $directionAndFolder; ?>">go to <?php echo $host; ?> offline</a>
+	<li>
+		<a href="<?php echo $zipFile; ?>"><?php echo $host; ?>.zip</a>
+	</li>
+	<li>
+		<a href="<?php echo $directionAndZipFolder; ?>">my offline websites</a>
+	</li>
+	<li>
+		<a href="bug.txt">view bugs</a>
+	</li>
 </body>
 </html>

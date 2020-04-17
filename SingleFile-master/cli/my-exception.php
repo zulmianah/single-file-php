@@ -12,4 +12,5 @@ function writeError($e)
 	}
 	appendTextFile($file, $date.$message.$path.$line.$trace);
 }
+// writeError(new Exception(""));
 ?>

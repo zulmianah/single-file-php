@@ -4,3 +4,21 @@
 	line: 20
 		trace
 		29		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php,
+[17/04/2020-01:31:17]
+	message: Error link input: df;ksdfjkd
+	path: C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 14
+		trace
+		124		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[17/04/2020-01:33:48]
+	message: Error link input: 
+	path: C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 14
+		trace
+		124		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[17/04/2020-01:34:16]
+	message: Error link input: 
+	path: C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 14
+		trace
+		124		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
