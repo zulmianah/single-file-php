@@ -1,0 +1,6 @@
+[17/04/2020-06:55:20]
+	message: error 404, link not found, https://www.alacase.fr/page/109348388
+	path: C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 20
+		trace
+		29		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php,
