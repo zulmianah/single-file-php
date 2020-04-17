@@ -19,24 +19,28 @@ function startSingleFileWordpress($link)
 	$filesLink = sizeof($status['extractedLinks']);
 	for($j=$filesSize;$j<$filesLink; $j++){
 		$linkLeft = $status['extractedLinks'][$j];
-		$file = $directionAndFolder.''.nameFile($linkLeft);
-		$commande = commandeSingleFile($file,$linkLeft);
-		array_push($status['files'], $file);
-		// exec($commande);
+		if(statusExist($linkLeft)){
+			$file = $directionAndFolder.''.nameFile($linkLeft);
+			$commande = commandeSingleFile($file,$linkLeft);
+			array_push($status['files'], $file);
+			exec($commande);
+		}
 	}
-	// $iWhere = 0;
-	// $filesSize = sizeof($status['files']);
-	// ifAllLinksDownloaded($status['files'],$iWhere,$filesSize);
-	// $regex = str_replace('.','\.',$host);
-	// foreach($status['files'] as $file){
-	// 	updateLinkToLocalLink(getHtml($file), $regex, $file);
-	// }
+	$iWhere = 0;
+	$filesSize = sizeof($status['files']);
+	ifAllLinksDownloaded($status['files'],$iWhere,$filesSize);
+	$regex = str_replace('.','\.',$host);
+	foreach($status['files'] as $file){
+		updateLinkToLocalLink(getHtml($file), $regex, $file);
+	}
 	return $status;
 }
 function getLinksFromWordpress($link,$parse)
 {
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
+	// var_dump($linksFromSitemap);
+	// var_dump($linksFromWordpressPagination);
 	return $links = array_merge($linksFromSitemap,$linksFromWordpressPagination);
 }
 function getLinksFromSitemap($link,$parse)
@@ -44,7 +48,6 @@ function getLinksFromSitemap($link,$parse)
 	$sitemapIndexXmlLink=$parse['scheme'].'://'.$parse['host'].'/sitemap_index.xml';
 	$sitemapIndexXml=simplexml_load_file($sitemapIndexXmlLink) or die("Error: Cannot create object");
 	$sitemapIndex = $sitemapIndexXml->sitemap;
-	$linkSize = 0;
 	$links=array();
 	foreach ($sitemapIndex as $siteMap) {
 		$sitemapXml = simplexml_load_file($siteMap->loc) or die("Error: Cannot create object");
@@ -62,7 +65,7 @@ function getLinksFromWordpressPagination($link)
 	$iError=0;
 	try {
 		while($iError<2){
-			$linkPage=$linkPagination.$iPage;
+			$linkPage=$linkPagination.$iPage.'/';
 			if(statusExist($linkPage)) {
 				array_push($links, $linkPage);
 				$iPage++;
@@ -100,6 +103,9 @@ try {
 	$finnish = time();
 	$interval = ($finnish - $start)/60;
 	$host = getHost($link);
+	$folder = linkToFolder($host);
+	$direction = '../../my-single-file-website/';
+	$directionAndFolder = $direction.''.$folder;
 } catch (Exception $e) {
 	writeError($e);
 }
