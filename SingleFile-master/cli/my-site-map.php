@@ -1,6 +1,44 @@
 <?php
 require 'file.php';
-require 'my-exception.php';
+require 'scrap-recursive.php';
+function startSingleFileWordpress($link)
+{
+	$host = getHost($link);
+	$folder = linkToFolder($host);
+	$direction = '../../my-single-file-website/';
+	$directionAndFolder = $direction.''.$folder;
+	$parse=parse_url($link);
+	$link=$parse['scheme'].'://'.$parse['host'];
+	$status = array();
+	$status['files']=array();
+	if (!file_exists($directionAndFolder)) {
+		mkdir($directionAndFolder);
+	}
+	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	$filesSize = sizeof($status['files']);
+	$filesLink = sizeof($status['extractedLinks']);
+	for($j=$filesSize;$j<$filesLink; $j++){
+		$linkLeft = $status['extractedLinks'][$j];
+		$file = $directionAndFolder.''.nameFile($linkLeft);
+		$commande = commandeSingleFile($file,$linkLeft);
+		array_push($status['files'], $file);
+		// exec($commande);
+	}
+	// $iWhere = 0;
+	// $filesSize = sizeof($status['files']);
+	// ifAllLinksDownloaded($status['files'],$iWhere,$filesSize);
+	// $regex = str_replace('.','\.',$host);
+	// foreach($status['files'] as $file){
+	// 	updateLinkToLocalLink(getHtml($file), $regex, $file);
+	// }
+	return $status;
+}
+function getLinksFromWordpress($link,$parse)
+{
+	$linksFromSitemap = getLinksFromSitemap($link,$parse);
+	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
+	return $links = array_merge($linksFromSitemap,$linksFromWordpressPagination);
+}
 function getLinksFromSitemap($link,$parse)
 {
 	$sitemapIndexXmlLink=$parse['scheme'].'://'.$parse['host'].'/sitemap_index.xml';
@@ -45,14 +83,6 @@ function getLinksFromWordpressPagination($link)
 		throw $e;
 	}
 }
-function getLinksFromWordpress($link)
-{
-	$parse=parse_url($link);
-	$link=$parse['scheme'].'://'.$parse['host'];
-	$linksFromSitemap = getLinksFromSitemap($link,$parse);
-	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	return $links = array_merge($linksFromSitemap,$linksFromWordpressPagination);
-}
 function statusExist($link)
 {
 	return getStatusLink($link)!=404;
@@ -62,10 +92,27 @@ function getStatusLink($link)
 	return substr(get_headers($link, 1)[0], 9, 3);
 }
 try {
-	$link='https://www.alacase.fr/sitemap_index.xml';
-	$links = getLinksFromWordpress($link);
-	var_dump($links);
+	$start = time();
+	$link = $_POST["name"];
+	$status = startSingleFileWordpress($link);
+	$sizeFile = sizeof($status['files']);
+	$sizeLink = sizeof($status['extractedLinks']);
+	$finnish = time();
+	$interval = ($finnish - $start)/60;
+	$host = getHost($link);
 } catch (Exception $e) {
 	writeError($e);
 }
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<h2>SUCCESS!</h2>
+	<p>You downloaded <?php echo $host; ?> for offline viewing in <?php echo $interval; ?> minutes</p>
+	<p><?php echo $sizeFile; ?>/<?php echo $sizeLink; ?> files</p>
+	<a href="<?php echo $directionAndFolder; ?>">go to <?php echo $host; ?> offline</a>
+</body>
+</html>

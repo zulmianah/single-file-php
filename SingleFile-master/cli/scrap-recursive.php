@@ -72,18 +72,18 @@ function ifAllLinksDownloaded($files,$i,$filesSize){
 	}
 	return true;
 }
-$start = time();
-$link = $_POST["name"];
-$host = getHost($link);
-$folder = linkToFolder($host);
-$directionAndFolder = $direction.''.$folder;
-$status = startScrapLinksWebsite($link,$host,$direction,$directionAndFolder);
-$sizeFile = sizeof($status['files']);
-$sizeLink = sizeof($status['extractedLinks']);
-$finnish = time();
-$interval = ($finnish - $start)/60;
+// $start = time();
+// $link = $_POST["name"];
+// $host = getHost($link);
+// $folder = linkToFolder($host);
+// $directionAndFolder = $direction.''.$folder;
+// $status = startScrapLinksWebsite($link,$host,$direction,$directionAndFolder);
+// $sizeFile = sizeof($status['files']);
+// $sizeLink = sizeof($status['extractedLinks']);
+// $finnish = time();
+// $interval = ($finnish - $start)/60;
 ?>
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
 	<title></title>
@@ -94,4 +94,4 @@ $interval = ($finnish - $start)/60;
 	<p><?php echo $sizeFile; ?>/<?php echo $sizeLink; ?> files</p>
 	<a href="<?php echo $directionAndFolder; ?>">go to <?php echo $host; ?> offline</a>
 </body>
-</html>
+</html> -->
