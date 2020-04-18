@@ -22,3 +22,10 @@
 	line: 14
 		trace
 		124		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[18/04/2020-04:10:47]
+	message: Error link input: 
+	path: C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 14
+		trace
+		124		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		2		C:\Users\kom\Downloads\wamp\www\single-file-php\SingleFile-master\cli\exec.php

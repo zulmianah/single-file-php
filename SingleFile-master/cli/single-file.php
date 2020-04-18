@@ -40,13 +40,13 @@ function nameFile($url){
 	}
 	return $fileName.'.html';
 }
-function execInBackground($cmd) { 
-    if (substr(php_uname(), 0, 7) == "Windows"){ 
-        pclose(popen("start /B ". $cmd, "r"));  
-    } 
-    else { 
-        exec($cmd . " > /dev/null &");   
-    } 
+function execInBackground($cmd) {
+    if (substr(php_uname(), 0, 7) == "Windows"){
+        pclose(popen("start /B ". $cmd, "r")); 
+    }
+    else {
+        exec($cmd . " > /dev/null &");  
+    }
 }
 function createCommande($link,$host,$nameFile){
 	$nameFile = nameFile($link);

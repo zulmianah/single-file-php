@@ -110,14 +110,6 @@ function getLinksFromWordpressPagination($link)
 	}
 	return $links;
 }
-function statusExist($link)
-{
-	return getStatusLink($link)!=404;
-}
-function getStatusLink($link)
-{
-	return substr(get_headers($link, 1)[0], 9, 3);
-}
 try {
 	$start = time();
 	$link = $_POST["name"];
