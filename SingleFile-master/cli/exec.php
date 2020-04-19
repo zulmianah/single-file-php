@@ -1,7 +1,6 @@
 <?php 
 require 'file.php';
 require 'scrap-recursive.php';
-$link = 'https://mbasic.facebook.com/';
 function essai($link)
 {
 	$parse=parse_url($link);
@@ -43,5 +42,6 @@ function essai($link)
 		// }
 	}
 }
+$link = 'https://mbasic.facebook.com/';
 essai($link);
 ?>

@@ -35,18 +35,17 @@ function nameFile($url){
 	}else{
 		$fileName = str_replace('/', '-', $path);
 	}
-	if(strcmp($fileName[0], '-')==0){
-		$fileName = ltrim($fileName,'-');
-	}
+	$fileName = ltrim($fileName,'-');
+	$fileName = rtrim($fileName, "-");
 	return $fileName.'.html';
 }
 function execInBackground($cmd) {
-    if (substr(php_uname(), 0, 7) == "Windows"){
-        pclose(popen("start /B ". $cmd, "r")); 
-    }
-    else {
-        exec($cmd . " > /dev/null &");  
-    }
+	if (substr(php_uname(), 0, 7) == "Windows"){
+		pclose(popen("start /B ". $cmd, "r")); 
+	}
+	else {
+		exec($cmd . " > /dev/null &");  
+	}
 }
 function createCommande($link,$host,$nameFile){
 	$nameFile = nameFile($link);
@@ -59,11 +58,21 @@ function updateLinkToLocalLink($html, $regex, $file){
 	$doc = new DOMDocument;
 	$doc->loadHTML($newLink);
 	$links = $doc->getElementsByTagName('a');
+	$symbol="=";
 	foreach ($links as $newLink1) {
 		$hrefLink = parse_url($newLink1->getAttribute('href'));
 		if(!isset($hrefLink['host'])){
 			if(isset($hrefLink['path'])){
-				$str = str_replace('/', "-", $hrefLink['path']);
+				$str = "";
+				if(strpos($hrefLink['path'], $symbol) !== false){
+					$str = 'index';
+				}else{
+					$str = str_replace('/', "-", $hrefLink['path']);
+					$str = rtrim($str,"-");
+					if ($str === '') {
+						$str = 'index';
+					}
+				}
 				$newLink1->setAttribute('href',$str.'.html');
 			}
 		}
