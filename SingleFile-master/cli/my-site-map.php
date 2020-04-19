@@ -1,8 +1,8 @@
 <?php
 require 'file.php';
 require 'scrap-recursive.php';
-error_reporting(0);
-ini_set('display_errors', 0);
+// error_reporting(0);
+// ini_set('display_errors', 0);
 function startSingleFileWordpress($link)
 {
 	$parse=parse_url($link);
@@ -19,7 +19,8 @@ function startSingleFileWordpress($link)
 	$directionAndFolder = $direction.''.$folder;
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
 	$link=$parse['scheme'].'://'.$parse['host'];
-	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	// $status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	$status['extractedLinks'] = [$link,$link,$link,$link,$link,$link,$link,$link];
 	$filesSize = sizeof($status['files']);
 	$filesLink = sizeof($status['extractedLinks']);
 	stream_context_set_default( [
@@ -34,14 +35,14 @@ function startSingleFileWordpress($link)
 			$file = $directionAndFolder.''.nameFile($linkLeft);
 			$commande = commandeSingleFile($file,$linkLeft);
 			array_push($status['files'], $file);
-			exec($commande);
+			execInBackground($commande);
 		}else{
 			writeError(new Exception($linkLeft." return an error 404"));
 		}
 	}
 	$iWhere = 0;
 	$filesSize = sizeof($status['files']);
-	ifAllLinksDownloaded($status['files'],$iWhere,$filesSize);
+	ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
 		updateLinkToLocalLink(getHtml($file), $regex, $file);
@@ -56,7 +57,7 @@ function getLinksFromWordpress($link,$parse)
 {
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	return $links = array_merge($linksFromSitemap,$linksFromWordpressPagination);
+	return $links = array_unique(array_merge($linksFromSitemap,$linksFromWordpressPagination));
 }
 function getLinksFromSitemap($link,$parse)
 {
@@ -112,7 +113,8 @@ function getLinksFromWordpressPagination($link)
 }
 try {
 	$start = time();
-	$link = $_POST["name"];
+	// $link = $_POST["name"];
+	$link = 'https://www.alacase.fr/';
 	$status = startSingleFileWordpress($link);
 	$sizeFile = sizeof($status['files']);
 	$sizeLink = sizeof($status['extractedLinks']);

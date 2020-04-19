@@ -12,5 +12,10 @@ function writeError($e)
 	}
 	appendTextFile($file, $date.$message.$path.$line.$trace);
 }
+function writeLog($message)
+{
+	$file = 'log.txt';
+	appendTextFile($file, $message);
+}
 // writeError(new Exception(""));
 ?>
