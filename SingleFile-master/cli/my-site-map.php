@@ -5,6 +5,7 @@ require 'scrap-recursive.php';
 // ini_set('display_errors', 0);
 function startSingleFileWordpress($link)
 {
+	file_put_contents('log.txt','');
 	$parse=parse_url($link);
 	$status = array();
 	$status['files']=array();
@@ -19,29 +20,29 @@ function startSingleFileWordpress($link)
 	$directionAndFolder = $direction.''.$folder;
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
 	$link=$parse['scheme'].'://'.$parse['host'];
-	// $status['extractedLinks'] = getLinksFromWordpress($link,$parse);
-	$status['extractedLinks'] = [$link,$link,$link,$link,$link,$link,$link,$link];
-	$filesSize = sizeof($status['files']);
-	$filesLink = sizeof($status['extractedLinks']);
+	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
 	stream_context_set_default( [
 		'ssl' => [
 			'verify_peer' => false,
 			'verify_peer_name' => false,
 		],
 	]);
-	for($j=$filesSize;$j<$filesLink; $j++){
-		$linkLeft = $status['extractedLinks'][$j];
-		if(statusExist($linkLeft)){
-			$file = $directionAndFolder.''.nameFile($linkLeft);
-			$commande = commandeSingleFile($file,$linkLeft);
-			array_push($status['files'], $file);
-			execInBackground($commande);
-		}else{
-			writeError(new Exception($linkLeft." return an error 404"));
+	$j=0;
+	$linksSize = sizeof($status['extractedLinks'])-1;
+	for($j;$j<$linksSize; $j++){
+		if(!isset($status['extractedLinks'][$j])){
+			array_splice($status['extractedLinks'],$j,1);
 		}
+		$linkLeft = $status['extractedLinks'][$j];
+		$nameFile = nameFile($linkLeft);
+		$file = $directionAndFolder.''.$nameFile;
+		$commande = commandeSingleFile($file,$linkLeft);
+		$status['files'][$j] = $file;
+		execInBackground($commande);
 	}
-	$iWhere = 0;
+	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
+	$iWhere = 0;
 	ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
@@ -56,8 +57,16 @@ function startSingleFileWordpress($link)
 function getLinksFromWordpress($link,$parse)
 {
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
+	$links = array();
+	foreach ($linksFromSitemap as $link) {
+		array_push($links, strval($link[0]));
+	}
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	return $links = array_unique(array_merge($linksFromSitemap,$linksFromWordpressPagination));
+	foreach ($linksFromWordpressPagination as $link) {
+		array_push($links, $link);
+	}
+	$links = array_unique($links);
+	return $links;
 }
 function getLinksFromSitemap($link,$parse)
 {
@@ -95,16 +104,10 @@ function getLinksFromWordpressPagination($link)
 				$iPage++;
 				$iError=0;
 			}else{
-				array_push($links, $linkPage);
 				writeError(new Exception($linkPage." not found"));
 				$iPage++;
 				$iError++;
 			}
-		}
-		$i=0;
-		while ($i<2) {
-			array_pop($links);
-			$i++;
 		}
 	} catch (Exception $e) {
 		writeError($e);
@@ -113,7 +116,7 @@ function getLinksFromWordpressPagination($link)
 }
 try {
 	$start = time();
-	// $link = $_POST["name"];
+	$link = $_POST["name"];
 	$link = 'https://www.alacase.fr/';
 	$status = startSingleFileWordpress($link);
 	$sizeFile = sizeof($status['files']);

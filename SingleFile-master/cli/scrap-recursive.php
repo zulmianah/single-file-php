@@ -65,10 +65,13 @@ function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 }
 function ifAllLinksDownloaded($files,$extractedLinks,$i,$filesSize){
 	for ($i;$i<$filesSize;$i++){
+		if(!isset($extractedLinks[$i])){
+			$i++;
+		}
 		if (!file_exists($files[$i])){ 
-			writeLog($files[$i]."\t==>\t".$extractedLinks[$i]);
 			sleep(15);
-			return ifAllLinksDownloaded($files,$i,$filesSize);
+			$i++;
+			return ifAllLinksDownloaded($files,$extractedLinks,$i,$filesSize);
 		}
 	}
 	return true;
