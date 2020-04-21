@@ -1,0 +1,24 @@
+[21/04/2020-09:36:05]
+	message: https://www.alacase.fr/page/1/ not found
+	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 109
+		trace
+		62		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		24		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		129		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[21/04/2020-09:36:37]
+	message: https://www.alacase.fr/page/16/ not found
+	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 109
+		trace
+		62		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		24		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		129		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[21/04/2020-09:36:38]
+	message: https://www.alacase.fr/page/17/ not found
+	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+	line: 109
+		trace
+		62		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		24		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		129		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
