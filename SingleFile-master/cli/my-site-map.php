@@ -19,6 +19,7 @@ function startSingleFileWordpress($link)
 	$folder = linkToFolder($parse['host']);
 	$direction = '../../my-single-file-website/';
 	$directionAndFolder = $direction.''.$folder;
+	checkFolderOrCreate($direction);
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
 	$link=$parse['scheme'].'://'.$parse['host'];
 	stream_context_set_default( [
@@ -41,11 +42,10 @@ function startSingleFileWordpress($link)
 		$status['files'][$j] = $file;
 		// execInBackground($commande);
 	}
-	return $status;
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
-	ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
+	// ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
 		updateLinkToLocalLink(getHtml($file), $regex, $file);
@@ -58,10 +58,8 @@ function startSingleFileWordpress($link)
 }
 function getLinksFromWordpress($link,$parse)
 {
-	$linksFromSitemap = getLinksFromSitemap($link,$parse);
-	var_export($linksFromSitemap);
-	return $linksFromSitemap;
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
+	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap));
 	return $links;
 }
@@ -83,8 +81,6 @@ function getLinksFromSitemap($link,$parse)
 					array_push($links, strval($url->loc[0]));
 				}
 			}
-	writeLog('ok xml');
-	return $links;
 		}
 	}
 	return $links;
