@@ -29,7 +29,7 @@ function startSingleFileWordpress($link)
 		],
 	]);
 	$j=0;
-	$linksSize = sizeof($status['extractedLinks'])-1;
+	$linksSize = sizeof($status['extractedLinks']);
 	for($j;$j<$linksSize; $j++){
 		if(!isset($status['extractedLinks'][$j])){
 			array_splice($status['extractedLinks'],$j,1);
@@ -39,9 +39,9 @@ function startSingleFileWordpress($link)
 		$file = $directionAndFolder.''.$nameFile;
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
-		execInBackground($commande);
-		writeLog($commande);
+		// execInBackground($commande);
 	}
+	return $status;
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
