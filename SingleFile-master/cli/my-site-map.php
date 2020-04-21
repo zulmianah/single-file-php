@@ -60,13 +60,13 @@ function getLinksFromWordpress($link,$parse)
 {
 	$links = array();
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	foreach ($linksFromWordpressPagination as $link) {
-		array_push($links, $link);
+	foreach ($linksFromWordpressPagination as $linkFromWordpressPagination) {
+		array_push($links, $linkFromWordpressPagination);
 	}
 	return $links;
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
-	foreach ($linksFromSitemap as $link) {
-		array_push($links, strval($link[0]));
+	foreach ($linksFromSitemap as $linkFromSitemap) {
+		array_push($links, strval($linksFromSitemap[0]));
 	}
 	$links = array_unique($links);
 	return $links;
