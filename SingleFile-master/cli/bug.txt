@@ -1,24 +1,24 @@
-[21/04/2020-09:36:05]
+[21/04/2020-01:44:51]
 	message: https://www.alacase.fr/page/1/ not found
 	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 109
+	line: 105
 		trace
-		62		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		24		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		129		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[21/04/2020-09:36:37]
+		64		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		31		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		125		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[21/04/2020-01:45:14]
 	message: https://www.alacase.fr/page/16/ not found
 	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 109
+	line: 105
 		trace
-		62		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		24		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		129		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[21/04/2020-09:36:38]
+		64		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		31		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		125		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[21/04/2020-01:45:15]
 	message: https://www.alacase.fr/page/17/ not found
 	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 109
+	line: 105
 		trace
-		62		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		24		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		129		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		64		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		31		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		125		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
