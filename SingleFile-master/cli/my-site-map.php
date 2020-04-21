@@ -21,6 +21,8 @@ function startSingleFileWordpress($link)
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
 	$link=$parse['scheme'].'://'.$parse['host'];
 	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	var_dump($status);
+	return $status;
 	stream_context_set_default( [
 		'ssl' => [
 			'verify_peer' => false,
@@ -56,14 +58,15 @@ function startSingleFileWordpress($link)
 }
 function getLinksFromWordpress($link,$parse)
 {
-	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$links = array();
-	foreach ($linksFromSitemap as $link) {
-		array_push($links, strval($link[0]));
-	}
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
 	foreach ($linksFromWordpressPagination as $link) {
 		array_push($links, $link);
+	}
+	return $links;
+	$linksFromSitemap = getLinksFromSitemap($link,$parse);
+	foreach ($linksFromSitemap as $link) {
+		array_push($links, strval($link[0]));
 	}
 	$links = array_unique($links);
 	return $links;
@@ -99,14 +102,16 @@ function getLinksFromWordpressPagination($link)
 	try {
 		while($iError<2){
 			$linkPage=$linkPagination.$iPage.'/';
-			if(statusExist($linkPage)) {
+			if(!is_404($linkPage)) {
 				array_push($links, $linkPage);
 				$iPage++;
 				$iError=0;
+				writeLog('success'.$linkPage);
 			}else{
 				writeError(new Exception($linkPage." not found"));
 				$iPage++;
 				$iError++;
+				writeLog('error'.$linkPage);
 			}
 		}
 	} catch (Exception $e) {
@@ -115,8 +120,14 @@ function getLinksFromWordpressPagination($link)
 	return $links;
 }
 try {
+	date_default_timezone_set("Africa/Nairobi");
+	date_default_timezone_get();
 	$start = time();
-	$link = $_POST["name"];
+	if(isset($_POST["name"])){
+		$link = $_POST["name"];
+	}else{
+		writeError(new Exception("Form name empty"));
+	}
 	$link = 'https://www.alacase.fr/';
 	$status = startSingleFileWordpress($link);
 	$sizeFile = sizeof($status['files']);

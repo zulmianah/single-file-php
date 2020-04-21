@@ -37,12 +37,29 @@ function getDocLinks($html){
 	$docAndLinks['doc'] = $doc;
 	$docAndLinks['links'] = $links;
 }
-function statusExist($link)
-{
-	return getStatusLink($link)!=404;
-}
 function getStatusLink($link)
 {
-	return substr(get_headers($link, 1)[0], 9, 3);
+	$isValidHttpCode = false;
+	$headers = get_headers($link, 1);
+	if ($headers[0] == 'HTTP/1.1 200 OK') {
+		$isValidHttpCode = true;
+	}
+	return $isValidHttpCode;
 }
+function is_404($url) {
+	$is_404 = true;
+	$handle = curl_init($url);
+	curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
+	$response = curl_exec($handle);
+	$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+	curl_close($handle);
+	if ($httpCode >= 200 && $httpCode < 300) {
+		$is_404 = false;
+	} else {
+		$is_404 = true;
+	}
+	var_dump($is_404);
+	return $is_404;
+}
+
 ?>
