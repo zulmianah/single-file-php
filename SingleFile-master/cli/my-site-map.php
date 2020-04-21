@@ -21,13 +21,13 @@ function startSingleFileWordpress($link)
 	$directionAndFolder = $direction.''.$folder;
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
 	$link=$parse['scheme'].'://'.$parse['host'];
-	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
 	stream_context_set_default( [
 		'ssl' => [
 			'verify_peer' => false,
 			'verify_peer_name' => false,
 		],
 	]);
+	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
 	$j=0;
 	$linksSize = sizeof($status['extractedLinks']);
 	for($j;$j<$linksSize; $j++){
@@ -58,16 +58,11 @@ function startSingleFileWordpress($link)
 }
 function getLinksFromWordpress($link,$parse)
 {
-	$links = array();
-	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	foreach ($linksFromWordpressPagination as $linkFromWordpressPagination) {
-		array_push($links, $linkFromWordpressPagination);
-	}
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
-	foreach ($linksFromSitemap as $linkFromSitemap) {
-		array_push($links, strval($linkFromSitemap[0]));
-	}
-	$links = array_unique($links);
+	var_export($linksFromSitemap);
+	return $linksFromSitemap;
+	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
+	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap));
 	return $links;
 }
 function getLinksFromSitemap($link,$parse)
@@ -85,9 +80,11 @@ function getLinksFromSitemap($link,$parse)
 				writeError(new Exception($sitemapXml." not found"));
 			} else {
 				foreach ($sitemapXml->url as $url) {
-					array_push($links, $url->loc);
+					array_push($links, strval($url->loc[0]));
 				}
 			}
+	writeLog('ok xml');
+	return $links;
 		}
 	}
 	return $links;
