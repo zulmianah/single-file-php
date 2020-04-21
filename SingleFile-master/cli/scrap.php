@@ -50,6 +50,8 @@ function is_404($url) {
 	$is_404 = true;
 	$handle = curl_init($url);
 	curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, FALSE); 
+	curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, FALSE);
 	$response = curl_exec($handle);
 	$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 	curl_close($handle);
@@ -58,7 +60,6 @@ function is_404($url) {
 	} else {
 		$is_404 = true;
 	}
-	var_dump($is_404);
 	return $is_404;
 }
 

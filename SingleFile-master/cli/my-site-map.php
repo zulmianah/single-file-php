@@ -21,8 +21,6 @@ function startSingleFileWordpress($link)
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
 	$link=$parse['scheme'].'://'.$parse['host'];
 	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
-	var_dump($status);
-	return $status;
 	stream_context_set_default( [
 		'ssl' => [
 			'verify_peer' => false,
@@ -40,16 +38,17 @@ function startSingleFileWordpress($link)
 		$file = $directionAndFolder.''.$nameFile;
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
-		execInBackground($commande);
+		// execInBackground($commande);
+		writeLog($commande);
 	}
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
-	ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
-	$regex = str_replace('.','\.',$parse['host']);
-	foreach($status['files'] as $file){
-		updateLinkToLocalLink(getHtml($file), $regex, $file);
-	}
+	// ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
+	// $regex = str_replace('.','\.',$parse['host']);
+	// foreach($status['files'] as $file){
+	// 	updateLinkToLocalLink(getHtml($file), $regex, $file);
+	// }
 	$directionAndFolder=checkFolderOrCreate('../../my-single-file-website/');
 	$directionAndZipFolder=checkFolderOrCreate('../../my-single-file-zip-website/');
 	zipFile($parse['host'],$directionAndFolder,$directionAndZipFolder);
@@ -63,7 +62,6 @@ function getLinksFromWordpress($link,$parse)
 	foreach ($linksFromWordpressPagination as $linkFromWordpressPagination) {
 		array_push($links, $linkFromWordpressPagination);
 	}
-	return $links;
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	foreach ($linksFromSitemap as $linkFromSitemap) {
 		array_push($links, strval($linksFromSitemap[0]));
@@ -106,12 +104,10 @@ function getLinksFromWordpressPagination($link)
 				array_push($links, $linkPage);
 				$iPage++;
 				$iError=0;
-				writeLog('success'.$linkPage);
 			}else{
 				writeError(new Exception($linkPage." not found"));
 				$iPage++;
 				$iError++;
-				writeLog('error'.$linkPage);
 			}
 		}
 	} catch (Exception $e) {
