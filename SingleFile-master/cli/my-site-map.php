@@ -34,18 +34,21 @@ function startSingleFileWordpress($link)
 	for($j;$j<$linksSize; $j++){
 		if(!isset($status['extractedLinks'][$j])){
 			array_splice($status['extractedLinks'],$j,1);
+			if($j==($linksSize-1)){
+				break;
+			}
 		}
 		$linkLeft = $status['extractedLinks'][$j];
 		$nameFile = nameFile($linkLeft);
 		$file = $directionAndFolder.''.$nameFile;
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
-		// execInBackground($commande);
+		execInBackground($commande);
 	}
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
-	// ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
+	ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
 		updateLinkToLocalLink(getHtml($file), $regex, $file);
