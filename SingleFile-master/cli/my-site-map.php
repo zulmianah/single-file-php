@@ -6,6 +6,7 @@ require 'scrap-recursive.php';
 function startSingleFileWordpress($link)
 {
 	file_put_contents('log.txt','');
+	file_put_contents('bug.txt','');
 	$parse=parse_url($link);
 	$status = array();
 	$status['files']=array();
@@ -38,20 +39,20 @@ function startSingleFileWordpress($link)
 		$file = $directionAndFolder.''.$nameFile;
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
-		// execInBackground($commande);
+		execInBackground($commande);
 		writeLog($commande);
 	}
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
-	// ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
-	// $regex = str_replace('.','\.',$parse['host']);
-	// foreach($status['files'] as $file){
-	// 	updateLinkToLocalLink(getHtml($file), $regex, $file);
-	// }
+	ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
+	$regex = str_replace('.','\.',$parse['host']);
+	foreach($status['files'] as $file){
+		updateLinkToLocalLink(getHtml($file), $regex, $file);
+	}
 	$directionAndFolder=checkFolderOrCreate('../../my-single-file-website/');
 	$directionAndZipFolder=checkFolderOrCreate('../../my-single-file-zip-website/');
-	zipFile($parse['host'],$directionAndFolder,$directionAndZipFolder);
+	// zipFile($parse['host'],$directionAndFolder,$directionAndZipFolder);
 	$status['status'] = 'SUCCESS';
 	return $status;
 }
@@ -64,7 +65,7 @@ function getLinksFromWordpress($link,$parse)
 	}
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	foreach ($linksFromSitemap as $linkFromSitemap) {
-		array_push($links, strval($linksFromSitemap[0]));
+		array_push($links, strval($linkFromSitemap[0]));
 	}
 	$links = array_unique($links);
 	return $links;

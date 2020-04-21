@@ -21,7 +21,7 @@ function linkToFolder($host){
 function checkFolderOrCreate($folder)
 {
 	if (!file_exists($folder)) {
-		mkdir($folder);
+		mkdir($folder,0777,FALSE);
 	}
 	return $folder;
 }
