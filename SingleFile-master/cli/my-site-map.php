@@ -29,9 +29,16 @@ function startSingleFileWordpress($link)
 		],
 	]);
 	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	// array_slice($status['extractedLinks'], 213,7);
+	return $status;
 	$j=0;
 	$linksSize = sizeof($status['extractedLinks']);
 	for($j;$j<$linksSize; $j++){
+		if($j%25==0 && $j!=0){
+			$sleep=25;
+			writeLog($sleep.'==>$j'.$j);
+			// sleep($sleep);
+		}
 		if(!isset($status['extractedLinks'][$j])){
 			array_splice($status['extractedLinks'],$j,1);
 			if($j==($linksSize-1)){
@@ -43,15 +50,17 @@ function startSingleFileWordpress($link)
 		$file = $directionAndFolder.''.$nameFile;
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
-		execInBackground($commande);
+		writeLog($commande.'==>'.$linkLeft);
+		// execInBackground($commande);
 	}
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
-	ifAllLinksDownloaded($status['files'],$status['extractedLinks'],$iWhere,$filesSize);
+	$sleep = 0;
+	// ifAllLinksDownloaded($sleep,$status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
-		updateLinkToLocalLink(getHtml($file), $regex, $file);
+		// updateLinkToLocalLink(getHtml($file), $regex, $file);
 	}
 	$directionAndFolder=checkFolderOrCreate('../../my-single-file-website/');
 	$directionAndZipFolder=checkFolderOrCreate('../../my-single-file-zip-website/');
@@ -62,6 +71,7 @@ function startSingleFileWordpress($link)
 function getLinksFromWordpress($link,$parse)
 {
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
+	return $linksFromWordpressPagination;
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap));
 	return $links;

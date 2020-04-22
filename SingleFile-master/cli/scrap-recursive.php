@@ -63,16 +63,18 @@ function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 	}
 	return $status;
 }
-function ifAllLinksDownloaded($files,$extractedLinks,$i,$filesSize){
+function ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize){
 	for ($i;$i<$filesSize;$i++){
 		if(!isset($extractedLinks[$i])){
 			$i++;
 		}
 		if (!file_exists($files[$i])){ 
-			sleep(15);
+			$sleep = (60/30)*($filesSize-$i);
+			writeLog($sleep);
+			sleep($sleep);
 			$i++;
-			return ifAllLinksDownloaded($files,$extractedLinks,$i,$filesSize);
-		}
+			return ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize);
+		}		
 	}
 	return true;
 }
