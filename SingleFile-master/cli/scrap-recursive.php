@@ -64,22 +64,16 @@ function startScrapLinksWebsite($link,$host,$direction,$directionAndFolder){
 	return $status;
 }
 function ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize){
-	$iError=0;
 	for ($i;$i<$filesSize;$i++){
 		if(!isset($extractedLinks[$i])){
 			$i++;
 		}
 		if (!file_exists($files[$i])){
-			$sleep=(60/30)*($filesSize-$i);
-			writeLog($extractedLinks[$i]);
-			sleep($sleep);
-			if($iError==2){
-				$iError++;
-				$i--;
+			$ierror++;
+			if($ierror==2){
+				writeLog($extractedLinks[$i]);
+				writeError(new Exception("link not downloaded: ".$extractedLinks[$i]));
 			}
-			// return ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize);
-		}else{
-			$iError=0;
 		}
 	}
 	return true;

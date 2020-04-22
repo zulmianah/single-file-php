@@ -21,6 +21,9 @@ function startSingleFileWordpress($link)
 	$directionAndFolder = $direction.''.$folder;
 	checkFolderOrCreate($direction);
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
+	$directionUpdate='../../my-single-file-updated/';
+	checkFolderOrCreate($directionUpdate);
+	$directionUpdate= checkFolderOrCreate($directionUpdate.''.$folder);
 	$link=$parse['scheme'].'://'.$parse['host'];
 	stream_context_set_default( [
 		'ssl' => [
@@ -29,10 +32,13 @@ function startSingleFileWordpress($link)
 		],
 	]);
 	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	// return $status;
 	$j=0;
 	$linksSize = sizeof($status['extractedLinks']);
-	$sleep=0;
-	$commandes = '';
+	$iBackGround=22;
+	$sleep=60;
+	$iExec=$iBackGround-2;
+	$iExec2=$iBackGround-1;
 	for($j;$j<$linksSize; $j++){
 		if(!isset($status['extractedLinks'][$j])){
 			array_splice($status['extractedLinks'],$j,1);
@@ -45,28 +51,26 @@ function startSingleFileWordpress($link)
 		$file = $directionAndFolder.''.$nameFile;
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
-		if(strcmp($commandes,'')==0){
-			$commandes=$commande;
+		if($j%$iBackGround==0 && $j!=0){
+			execInBackground($commande);
+			sleep($sleep);
 		}else{
-			$commandes=$commandes.' && '.$commande;
-		}
-		if($j%5==0 && $j!=0){
-			writeLog($commandes);
-			execInBackground($commandes);
-			$commandes = '';
+			execInBackground($commande);
 		}
 	}
-	if(strcmp($commandes,'')!=0){
-		writeLog('farany'.$commandes);
-		execInBackground($commandes);
-	}
+	sleep($sleep);
+	// return $status;
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
 	ifAllLinksDownloaded($sleep,$status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
-		updateLinkToLocalLink(getHtml($file), $regex, $file);
+		if (file_exists($file)){
+			updateLinkToLocalLink(getHtml($file), $regex, $file);
+		}else{
+			writeError(new Exception("link not downloaded: ".$file));
+		}
 	}
 	$directionAndFolder=checkFolderOrCreate('../../my-single-file-website/');
 	$directionAndZipFolder=checkFolderOrCreate('../../my-single-file-zip-website/');
@@ -87,21 +91,25 @@ function getLinksFromSitemap($link,$parse)
 {
 	$links=array();
 	$sitemapIndexXmlLink=$parse['scheme'].'://'.$parse['host'].'/sitemap_index.xml';
-	$sitemapIndexXml=simplexml_load_file($sitemapIndexXmlLink);
-	if($sitemapIndexXml===FALSE) {
-		writeError(new Exception($sitemapIndexXmlLink." not found"));
-	} else {
+	$sitemapIndexXml=null;
+	if (!is_404($sitemapIndexXmlLink)) {
+		$sitemapIndexXml = simplexml_load_file($sitemapIndexXmlLink);
 		$sitemapIndex = $sitemapIndexXml->sitemap;
 		foreach ($sitemapIndex as $siteMap) {
 			$sitemapXml = simplexml_load_file($siteMap->loc);
-			if($sitemapXml===FALSE) {
-				writeError(new Exception($sitemapXml." not found"));
-			} else {
+			if (!is_404(($siteMap->loc))) {
+				$sitemapXml = simplexml_load_file($siteMap->loc);
 				foreach ($sitemapXml->url as $url) {
 					array_push($links, strval($url->loc[0]));
 				}
+			} else {
+				writeError(new Exception($sitemapXml." not found"));
+				return $links;
 			}
 		}
+	} else {
+		writeError(new Exception($sitemapIndexXmlLink." not found"));
+		return $links;
 	}
 	return $links;
 }
