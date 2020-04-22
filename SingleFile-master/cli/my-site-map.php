@@ -29,15 +29,14 @@ function startSingleFileWordpress($link)
 		],
 	]);
 	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
-	// array_slice($status['extractedLinks'], 213,7);
-	return $status;
+	// $status['extractedLinks'] = array_slice($status['extractedLinks'], 213,80);
+	// return $status;
 	$j=0;
 	$linksSize = sizeof($status['extractedLinks']);
+	$sleep=25;
 	for($j;$j<$linksSize; $j++){
 		if($j%25==0 && $j!=0){
-			$sleep=25;
-			writeLog($sleep.'==>$j'.$j);
-			// sleep($sleep);
+			sleep($sleep);
 		}
 		if(!isset($status['extractedLinks'][$j])){
 			array_splice($status['extractedLinks'],$j,1);
@@ -50,13 +49,12 @@ function startSingleFileWordpress($link)
 		$file = $directionAndFolder.''.$nameFile;
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
-		writeLog($commande.'==>'.$linkLeft);
-		// execInBackground($commande);
+		execInBackground($commande);
+		writeLog($commande."izy");
 	}
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
-	$sleep = 0;
 	// ifAllLinksDownloaded($sleep,$status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
@@ -70,9 +68,9 @@ function startSingleFileWordpress($link)
 }
 function getLinksFromWordpress($link,$parse)
 {
-	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	return $linksFromWordpressPagination;
+	$links=array();
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
+	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
 	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap));
 	return $links;
 }
