@@ -56,6 +56,10 @@ function startSingleFileWordpress($link)
 			$commandes = '';
 		}
 	}
+	if(strcmp($commandes,'')!=0){
+		writeLog('farany'.$commandes);
+		execInBackground($commandes);
+	}
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
@@ -74,7 +78,7 @@ function getLinksFromWordpress($link,$parse)
 {
 	$links=array();
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
-	return $linksFromWordpressPagination;
+	// return $linksFromWordpressPagination;
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap));
 	return $links;

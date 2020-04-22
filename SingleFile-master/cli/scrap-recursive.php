@@ -73,7 +73,7 @@ function ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize){
 			writeLog($sleep);
 			sleep($sleep);
 			$i++;
-			return ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize);
+			// return ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize);
 		}		
 	}
 	return true;
