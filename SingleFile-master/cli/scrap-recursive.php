@@ -69,6 +69,8 @@ function ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize){
 			$i++;
 		}
 		if (!file_exists($files[$i])){
+			$sleep=(60/30)*($filesSize-$i);
+			writeLog($sleep);
 			sleep($sleep);
 			$i++;
 			return ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize);
