@@ -56,7 +56,8 @@ function updateLinkToLocalLink($html, $regex, $file){
 	$pattern = '/https?:\/\/'.$regex.'\//';
 	$newLink = preg_replace($pattern,'', $html);
 	$doc = new DOMDocument;
-	$doc->loadHTML($newLink);
+	$doc->encoding = 'utf-8';
+	$doc->loadHTML(utf8_decode($newLink));
 	$links = $doc->getElementsByTagName('a');
 	$symbol="=";
 	foreach ($links as $newLink1) {
@@ -78,7 +79,8 @@ function updateLinkToLocalLink($html, $regex, $file){
 		}
 	}
 	file_put_contents($file,'');
-	file_put_contents($file,$doc->saveHTML());
+	$update = $doc->saveHTML();
+	file_put_contents($file,$update);
 	libxml_use_internal_errors(false);
 }
 ?>

@@ -1,19 +1,20 @@
 <?php
+require 'my-exception.php';
 require 'file.php';
 require 'scrap-recursive.php';
-// error_reporting(0);
-// ini_set('display_errors', 0);
 function startSingleFileWordpress($link)
 {
-	file_put_contents('log.txt','');
-	file_put_contents('bug.txt','');
 	$parse=parse_url($link);
 	$status = array();
 	$status['files']=array();
 	$status['extractedLinks'] = array();
 	$status['status'] = 'FAIL';
-	if(sizeof($parse)<2){
-		writeError(new Exception("Error link input: ".$link));
+	if(!inputIsALink($parse)){
+		writeError(new Exception("Error link input is not parseable: ".$link));
+		return $status;
+	}
+	if(is_404($link)){
+		writeError(new Exception("Error 404 link not found: ".$link));
 		return $status;
 	}
 	$folder = linkToFolder($parse['host']);
@@ -21,24 +22,20 @@ function startSingleFileWordpress($link)
 	$directionAndFolder = $direction.''.$folder;
 	checkFolderOrCreate($direction);
 	$directionAndFolder=checkFolderOrCreate($direction.''.$folder);
-	$directionUpdate='../../my-single-file-updated/';
-	checkFolderOrCreate($directionUpdate);
-	$directionUpdate= checkFolderOrCreate($directionUpdate.''.$folder);
-	$link=$parse['scheme'].'://'.$parse['host'];
+	$link=$parse['scheme'].'://'.$parse['host'].'/';
 	stream_context_set_default( [
 		'ssl' => [
 			'verify_peer' => false,
 			'verify_peer_name' => false,
 		],
 	]);
-	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	// $status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	$status['extractedLinks'] = [$link];
 	// return $status;
 	$j=0;
 	$linksSize = sizeof($status['extractedLinks']);
 	$iBackGround=22;
 	$sleep=60;
-	$iExec=$iBackGround-2;
-	$iExec2=$iBackGround-1;
 	for($j;$j<$linksSize; $j++){
 		if(!isset($status['extractedLinks'][$j])){
 			array_splice($status['extractedLinks'],$j,1);
@@ -52,18 +49,16 @@ function startSingleFileWordpress($link)
 		$commande = commandeSingleFile($file,$linkLeft);
 		$status['files'][$j] = $file;
 		if($j%$iBackGround==0 && $j!=0){
-			execInBackground($commande);
 			sleep($sleep);
-		}else{
-			execInBackground($commande);
 		}
+		// execInBackground($commande);
 	}
-	sleep($sleep);
+	// sleep($sleep);
 	// return $status;
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
 	$iWhere = 0;
-	ifAllLinksDownloaded($sleep,$status['files'],$status['extractedLinks'],$iWhere,$filesSize);
+	// ifAllLinksDownloaded($sleep,$status['files'],$status['extractedLinks'],$iWhere,$filesSize);
 	$regex = str_replace('.','\.',$parse['host']);
 	foreach($status['files'] as $file){
 		if (file_exists($file)){

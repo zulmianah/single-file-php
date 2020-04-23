@@ -1,4 +1,6 @@
 <?php
+// error_reporting(0);
+// ini_set('display_errors', 0);
 function writeError($e)
 {
 	$file = 'bug.txt';
@@ -18,4 +20,6 @@ function writeLog($message)
 	appendTextFile($file, $message);
 }
 // writeError(new Exception(""));
+file_put_contents('log.txt','');
+file_put_contents('bug.txt','');
 ?>

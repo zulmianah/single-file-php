@@ -1,6 +1,5 @@
 <?php
 require 'scrap.php';
-require 'my-exception.php';
 require 'single-file.php';
 // $status['extractedLinks']	les liens a telecharger
 // $status['files']				les noms de fichiers telecharges
@@ -69,11 +68,8 @@ function ifAllLinksDownloaded($sleep,$files,$extractedLinks,$i,$filesSize){
 			$i++;
 		}
 		if (!file_exists($files[$i])){
-			$ierror++;
-			if($ierror==2){
-				writeLog($extractedLinks[$i]);
-				writeError(new Exception("link not downloaded: ".$extractedLinks[$i]));
-			}
+			writeLog($extractedLinks[$i]);
+			writeError(new Exception("link not downloaded: ".$extractedLinks[$i]));
 		}
 	}
 	return true;

@@ -6,8 +6,7 @@ function getHtml($filename) {
 	libxml_use_internal_errors(false);
 	return $html;
 }
-function extracteLinks($url, $host, $html, $extractedLinks)
-{
+function extracteLinks($url, $host, $html, $extractedLinks){
 	$doc = new DOMDocument;
 	@$doc->loadHTML($html);
 	$links = $doc->getElementsByTagName('a');
@@ -62,5 +61,7 @@ function is_404($url) {
 	}
 	return $is_404;
 }
-
+function inputIsALink($parse){
+	return sizeof($parse)>=2;
+}
 ?>
