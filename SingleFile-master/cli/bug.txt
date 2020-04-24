@@ -1,45 +1,16 @@
-[22/04/2020-03:30:38]
-	message: https://www.alacase.fr/page/1/ not found
+[24/04/2020-10:13:38]
+	message: https://www.alacase.fr//page/0/ not found
 	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 130
+	line: 128
 		trace
-		84		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		34		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		150		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[22/04/2020-03:31:00]
-	message: link not downloaded: 
-	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\scrap-recursive.php
-	line: 77
-		trace
-		66		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		150		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[22/04/2020-03:31:08]
-	message: https://www.alacase.fr/page/16/ not found
+		80		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		33		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		149		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+[24/04/2020-10:13:39]
+	message: https://www.alacase.fr//page/1/ not found
 	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 130
+	line: 128
 		trace
-		84		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		34		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		150		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[22/04/2020-03:31:10]
-	message: https://www.alacase.fr/page/17/ not found
-	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 130
-		trace
-		84		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		34		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		150		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[22/04/2020-03:31:58]
-	message: link not downloaded: 
-	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\scrap-recursive.php
-	line: 77
-		trace
-		66		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		150		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[22/04/2020-03:32:57]
-	message: link not downloaded: 
-	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\scrap-recursive.php
-	line: 77
-		trace
-		66		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		150		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		80		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		33		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		149		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php

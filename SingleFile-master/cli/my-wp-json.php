@@ -16,7 +16,9 @@ function allWpJsonLinks($link){
 }
 function exportJsonEncode($array,$file)
 {
-	echo json_encode($array);
+	$json = json_encode($array);
+	file_put_contents($file,'');
+	file_put_contents($file,$json);
 }
 function wpJsonPages($link)
 {

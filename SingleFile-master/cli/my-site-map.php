@@ -2,6 +2,7 @@
 require 'my-exception.php';
 require 'file.php';
 require 'scrap-recursive.php';
+require 'my-wp-json.php';
 function startSingleFileWordpress($link)
 {
 	$parse=parse_url($link);
@@ -29,9 +30,9 @@ function startSingleFileWordpress($link)
 			'verify_peer_name' => false,
 		],
 	]);
-	// $status['extractedLinks'] = getLinksFromWordpress($link,$parse);
-	$status['extractedLinks'] = [$link];
-	// return $status;
+	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	// $status['extractedLinks'] = [$link];
+	return $status;
 	$j=0;
 	$linksSize = sizeof($status['extractedLinks']);
 	$iBackGround=22;
@@ -51,9 +52,9 @@ function startSingleFileWordpress($link)
 		if($j%$iBackGround==0 && $j!=0){
 			sleep($sleep);
 		}
-		// execInBackground($commande);
+		execInBackground($commande);
 	}
-	// sleep($sleep);
+	sleep($sleep);
 	// return $status;
 	$linksSize = sizeof($status['extractedLinks']);
 	$filesSize = sizeof($status['files']);
@@ -79,7 +80,9 @@ function getLinksFromWordpress($link,$parse)
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
 	// return $linksFromWordpressPagination;
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
-	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap));
+	$linkFromWpJson = allWpJsonLinks($link);
+	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap,$linkFromWpJson));
+	exportJsonEncode($links,"../.././$folder.json");
 	return $links;
 }
 function getLinksFromSitemap($link,$parse)
@@ -141,7 +144,8 @@ try {
 	}else{
 		writeError(new Exception("Form name empty"));
 	}
-	$link = 'https://www.alacase.fr/';
+	// $link = 'https://www.alacase.fr/';
+	// $link = 'https://www.blogueurssansfrontieres.org/';
 	$status = startSingleFileWordpress($link);
 	$sizeFile = sizeof($status['files']);
 	$sizeLink = sizeof($status['extractedLinks']);
