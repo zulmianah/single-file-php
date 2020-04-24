@@ -30,9 +30,9 @@ function startSingleFileWordpress($link)
 			'verify_peer_name' => false,
 		],
 	]);
-	$status['extractedLinks'] = getLinksFromWordpress($link,$parse);
+	$status['extractedLinks'] = getLinksFromWordpress($link,$parse,$parse['host'],$directionAndFolder);
 	// $status['extractedLinks'] = [$link];
-	return $status;
+	// return $status;
 	$j=0;
 	$linksSize = sizeof($status['extractedLinks']);
 	$iBackGround=22;
@@ -74,7 +74,7 @@ function startSingleFileWordpress($link)
 	$status['status'] = 'SUCCESS';
 	return $status;
 }
-function getLinksFromWordpress($link,$parse)
+function getLinksFromWordpress($link,$parse,$file,$folder)
 {
 	$links=array();
 	$linksFromWordpressPagination = getLinksFromWordpressPagination($link);
@@ -82,7 +82,7 @@ function getLinksFromWordpress($link,$parse)
 	$linksFromSitemap = getLinksFromSitemap($link,$parse);
 	$linkFromWpJson = allWpJsonLinks($link);
 	$links = array_unique(array_merge($linksFromWordpressPagination,$linksFromSitemap,$linkFromWpJson));
-	exportJsonEncode($links,"../.././$folder.json");
+	exportJsonEncode($links,$folder.$file.".json");
 	return $links;
 }
 function getLinksFromSitemap($link,$parse)
