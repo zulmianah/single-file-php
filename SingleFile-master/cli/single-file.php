@@ -1,30 +1,11 @@
 <?php
-function singleFile($url,$mySingleFileDirection){
-	$fileName = nameFile($url);
-	$command = 'single-file '.$url.' '.$mySingleFileDirection.$fileName;
-	exec($command, $output, $return_var);
-	if($return_var !== 0){
-		riteError(new Exception($command." doesn't work properly"));
-	}
-	else{
-		return $fileName;
-	}
-}
 function commandeSingleFile($file,$link){
 	return $command = 'single-file '.$link.' '.$file;
-}
-function listSingleFile($file,$link){
-	return $command = $link.' '.$file;
 }
 function singleFiles($url,$mySingleFileDirection){
 	$fileName = nameFile($url);
 	$command = 'single-file --urls-file='.$mySingleFileDirection.$fileName;
 	execInBackground($command);
-}
-function singleFileLinks($urls){
-	foreach ($urls as $url) {
-		singleFile($url);
-	}
 }
 function nameFile($url){
 	$parse = parse_url($url);
@@ -46,10 +27,6 @@ function execInBackground($cmd) {
 	else {
 		exec($cmd . " > /dev/null &");  
 	}
-}
-function createCommande($link,$host,$nameFile){
-	$nameFile = nameFile($link);
-	return $host.'/'.$nameFile;
 }
 function updateLinkToLocalLink($html, $regex, $file){
 	libxml_use_internal_errors(true);
