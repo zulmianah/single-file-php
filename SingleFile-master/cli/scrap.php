@@ -36,7 +36,7 @@ function is404($url) {
 function inputIsALink($parse){
 	return sizeof($parse)>=2;
 }
-function isValideLink($link,$status){
+function isValideLink($link,$parse){
 	if(!inputIsALink($parse)){
 		writeError(new Exception('Error link input is not parseable: '.$link));
 		return false;

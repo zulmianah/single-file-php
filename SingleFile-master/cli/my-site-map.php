@@ -13,7 +13,7 @@ function startSingleFileWordpress($link){
 	$status['files']=array();
 	$status['extracted_links']=array();
 	$status['status']='FAIL';
-	if(!isValideLink($link,$status)){
+	if(!isValideLink($link,$parse)){		
 		return $status;
 	}
 	$folder=linkToFolder($parse['host']);
@@ -147,9 +147,6 @@ try {
 	<h2><?php echo $status['status'] ?>!</h2>
 	<p>You downloaded <?php echo $host; ?> for offline viewing in <?php echo $interval; ?> minutes</p>
 	<p><?php echo $sizeFile; ?>/<?php echo $sizeLink; ?> files</p>
-	<li>
-		<a href='<?php echo $zipFile; ?>'><?php echo $host; ?>.zip</a>
-	</li>
 	<li>
 		<a href='bug.txt'>view bugs</a>
 	</li>

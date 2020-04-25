@@ -1,16 +1,7 @@
-[24/04/2020-11:12:15]
-	message: https://cpasmoi.fr//page/0/ not found
-	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 128
+[25/04/2020-09:29:13]
+	message: Error 404 link not found: https://www.blogueurssansfrontieres.org/
+	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\scrap.php
+	line: 45
 		trace
-		80		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		33		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		149		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-[24/04/2020-11:12:17]
-	message: https://cpasmoi.fr//page/1/ not found
-	path: D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-	line: 128
-		trace
-		80		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		33		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
-		149		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		16		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
+		131		D:\Documents\WAMP\www\single-file-php\SingleFile-master\cli\my-site-map.php
