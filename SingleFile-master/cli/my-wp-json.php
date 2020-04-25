@@ -1,11 +1,4 @@
 <?php
-// $link = 'https://www.blogueurssansfrontieres.org/';
-// $link = 'https://cpasmoi.fr/';
-// $page = 1;
-// $links = wpJsonArticlesPerPage($link, $page);
-// var_dump($links);
-// $links = wpJsonArticles($link);
-// var_dump($links);
 function allWpJsonLinks($link){
 	$links = array();
 	$linksPages = wpJsonPages($link);
@@ -22,21 +15,21 @@ function exportJsonEncode($array,$file)
 }
 function wpJsonPages($link)
 {
-	$apiLink = '/wp-json/wp/v2/pages?per_page=100&_fields=link';
-	$linkAndApi = $link.$apiLink;
+	$API_LINK = '/wp-json/wp/v2/pages?per_page=100&_fields=link';
+	$linkAndApi = $link.$API_LINK;
 	return wpJsonLinks($linkAndApi);
 }
 //categories
 function wpJsonCategories($link)
 {
-	$apiLink = '/wp-json/wp/v2/categories?per_page=100&_fields=link';
-	$linkAndApi = $link.$apiLink;
+	$API_LINK = '/wp-json/wp/v2/categories?per_page=100&_fields=link';
+	$linkAndApi = $link.$API_LINK;
 	return wpJsonLinks($linkAndApi);
 }
 function wpJsonArticlesPerPage($link,$page)
 {
-	$apiLink = '/wp-json/wp/v2/posts?per_page=100&_fields=link&page=';
-	$linkAndApi = $link.$apiLink.$page;
+	$API_LINK = '/wp-json/wp/v2/posts?per_page=100&_fields=link&page=';
+	$linkAndApi = $link.$API_LINK.$page;
 	return wpJsonLinks($linkAndApi);
 }
 function wpJsonArticles($link)
@@ -68,7 +61,7 @@ function wpJsonLinks($linkAndApi)
 			array_push($links,$obj->link);
 		}
 	}else{
-		// throw new Exception($objs->message." Code: ".$objs->code." ".$objs->data->status, 1);
+		writeError(new Exception($objs->message.' Code: '.$objs->code.' '.$objs->data->status));
 		return $links;
 	}
 	return $links;
